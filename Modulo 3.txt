@@ -1,0 +1,88 @@
+#include <LiquidCrystal.h>
+int pot = A4;
+int bot = A0;
+int op1 = 0;
+int op2 = 0;
+int op3 = 0;
+int op = 1;
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+void setup() {
+  lcd.begin(16, 2);
+  lcd.setCursor(0, 0);
+  lcd.print("Opcion");
+  lcd.setCursor(0, 1);
+  lcd.print("Val=");
+  lcd.setCursor(8, 0);
+  lcd.print(":");
+}
+  
+void loop() {
+  int volt = analogRead(pot);
+  lcd.setCursor(4, 1);
+  lcd.print(volt);
+  lcd.print("    ");
+
+  
+  // Boton Prev
+  int prev = analogRead(bot);
+  if( 217 < prev && prev < 417 && op > 1){
+    op-=1;
+    delay(300);
+  }else{
+  if( 217 < prev && prev < 417 && op == 1){
+    op=3;
+    delay(300);
+  }
+  }
+   // Phototransistor
+  
+  int sensor = analogRead(A1);
+  if(sensor < 600){
+    switch(op){
+      case 1:
+          op1 = volt;
+          delay(100);
+          break;
+      case 2:
+          op2 = volt;
+          delay(300);
+          break;
+      case 3:
+          op3 = volt;
+          delay(300);
+          break;
+     }
+  }  
+  
+  // Boton next
+  int next = analogRead(bot);
+  if(610 < next && next < 810){
+    if(op == 3){
+      op=1;
+      delay(300);
+    }else{
+    if(op < 3){
+      op+=1;
+      delay(300);
+    }
+    }
+  }
+   
+  lcd.setCursor(7, 0); // indica en que opcion estoy trabajando
+  lcd.print(op);
+  lcd.setCursor(9, 0);
+  switch(op){
+    case 1:
+      lcd.print(op1);
+      break;
+    case 2:
+      lcd.print(op2);
+      break;
+    case 3:
+      lcd.print(op3);
+      break;
+  }
+  lcd.print("    ");
+}
